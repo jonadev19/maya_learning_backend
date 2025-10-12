@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from bson import ObjectId
 
 from .models import Grupo, Administrador, Alumno, Usuario
@@ -12,6 +13,7 @@ from .serializers import (
     AlumnoCreateSerializer,
     UsuarioSerializer
 )
+from .permissions import IsAdmin, IsAdminOrReadOnly
 
 
 class GrupoListView(APIView):
@@ -19,6 +21,8 @@ class GrupoListView(APIView):
     GET /api/grupos/ - Lista todos los grupos
     POST /api/grupos/ - Crea un nuevo grupo
     """
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         grupos = Grupo.listar_activos()
@@ -54,6 +58,8 @@ class GrupoListView(APIView):
 
 class GrupoDetailView(APIView):
     """GET /api/grupos/<id>/ - Detalle de un grupo"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, id):
         try:
@@ -77,6 +83,8 @@ class AdministradorListView(APIView):
     GET /api/administradores/ - Lista todos los administradores
     POST /api/administradores/ - Crea un nuevo administrador
     """
+    authentication_classes = []
+    permission_classes = [IsAdmin]
 
     def get(self, request):
         admins = Administrador.listar_todos()
@@ -112,6 +120,8 @@ class AdministradorListView(APIView):
 
 class AdministradorDetailView(APIView):
     """GET /api/administradores/<id>/ - Detalle de un administrador"""
+    authentication_classes = []
+    permission_classes = [IsAdmin]
 
     def get(self, request, id):
         try:
@@ -135,6 +145,8 @@ class AlumnoListView(APIView):
     GET /api/alumnos/ - Lista todos los alumnos
     POST /api/alumnos/ - Crea un nuevo alumno
     """
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         # Filtros opcionales via query params
@@ -182,6 +194,8 @@ class AlumnoListView(APIView):
 
 class AlumnoDetailView(APIView):
     """GET /api/alumnos/<id>/ - Detalle de un alumno"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, id):
         try:
@@ -202,6 +216,8 @@ class AlumnoDetailView(APIView):
 
 class UsuarioListView(APIView):
     """GET /api/usuarios/ - Lista todos los usuarios"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         # Filtro opcional por rol
@@ -221,6 +237,8 @@ class UsuarioListView(APIView):
 
 class UsuarioDetailView(APIView):
     """GET /api/usuarios/<id>/ - Detalle de un usuario"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, id):
         try:

@@ -1,7 +1,9 @@
 asgiref==3.10.0
 Django==5.2.7
 djangorestframework==3.16.1
+djangorestframework-simplejwt==5.5.1
 dnspython==2.8.0
+PyJWT==2.10.1
 pymongo==3.11.4
 python-dotenv==1.1.1
 pytz==2025.2

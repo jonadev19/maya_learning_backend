@@ -8,10 +8,164 @@ API REST para la aplicación de enseñanza del lenguaje maya.
 
 ## 📚 Índice
 
-1. [Usuarios](#usuarios)
-2. [Contenido](#contenido)
-3. [Evaluaciones](#evaluaciones)
-4. [Reportes](#reportes)
+1. [Autenticación](#autenticación)
+2. [Usuarios](#usuarios)
+3. [Contenido](#contenido)
+4. [Evaluaciones](#evaluaciones)
+5. [Reportes](#reportes)
+
+---
+
+## Autenticación
+
+La API utiliza **JWT (JSON Web Tokens)** para la autenticación. La mayoría de los endpoints requieren autenticación.
+
+### Login
+
+#### Iniciar sesión
+```
+POST /api/auth/login/
+```
+**Cuerpo:**
+```json
+{
+  "email": "admin@maya.edu",
+  "password": "admin123"
+}
+```
+**Respuesta (200 OK):**
+```json
+{
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "user": {
+    "id": "507f1f77bcf86cd799439011",
+    "email": "admin@maya.edu",
+    "nombre": "Carlos",
+    "apellido": "López",
+    "rol": "administrador"
+  }
+}
+```
+
+**Nota:** Guarda el `access` token para usarlo en las peticiones subsecuentes.
+
+---
+
+### Refresh Token
+
+#### Refrescar el token de acceso
+```
+POST /api/auth/refresh/
+```
+**Cuerpo:**
+```json
+{
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+}
+```
+**Respuesta (200 OK):**
+```json
+{
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+}
+```
+
+---
+
+### Logout
+
+#### Cerrar sesión
+```
+POST /api/auth/logout/
+```
+**Autenticación:** Requerida
+
+**Header:**
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
+```
+
+**Cuerpo:**
+```json
+{
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+}
+```
+**Respuesta (200 OK):**
+```json
+{
+  "message": "Sesión cerrada exitosamente"
+}
+```
+
+---
+
+### Usuario Actual
+
+#### Obtener información del usuario autenticado
+```
+GET /api/auth/me/
+```
+**Autenticación:** Requerida
+
+**Header:**
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
+```
+
+**Respuesta (200 OK):**
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "email": "admin@maya.edu",
+  "nombre": "Carlos",
+  "apellido": "López",
+  "rol": "administrador",
+  "activo": true
+}
+```
+
+---
+
+### Uso de Autenticación en Endpoints
+
+Para acceder a endpoints protegidos, incluye el token de acceso en el header `Authorization`:
+
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
+```
+
+**Ejemplo con curl:**
+```bash
+curl -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..." \
+     http://localhost:8000/api/grupos/
+```
+
+---
+
+### Permisos
+
+Los endpoints tienen diferentes niveles de permisos:
+
+- **Públicos:** Login (no requieren autenticación)
+- **Autenticados:** Requieren token válido
+- **Solo Administradores:** Solo usuarios con rol `administrador`
+- **Lectura para todos, Escritura solo Administradores:** Todos los autenticados pueden leer, solo administradores pueden crear/editar
+
+#### Permisos por Endpoint:
+
+| Endpoint | GET | POST | PUT/PATCH | DELETE |
+|----------|-----|------|-----------|--------|
+| `/auth/login/` | - | Público | - | - |
+| `/auth/refresh/` | - | Público | - | - |
+| `/auth/logout/` | - | Autenticado | - | - |
+| `/auth/me/` | Autenticado | - | - | - |
+| `/grupos/` | Autenticado | Admin | - | - |
+| `/administradores/` | Admin | Admin | - | - |
+| `/alumnos/` | Autenticado | Admin | - | - |
+| `/usuarios/` | Autenticado | - | - | - |
 
 ---
 

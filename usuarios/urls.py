@@ -9,8 +9,20 @@ from .views import (
     UsuarioListView,
     UsuarioDetailView
 )
+from .authentication import (
+    LoginView,
+    CustomTokenRefreshView,
+    LogoutView,
+    MeView
+)
 
 urlpatterns = [
+    # Autenticación
+    path('auth/login/', LoginView.as_view(), name='login'),
+    path('auth/refresh/', CustomTokenRefreshView.as_view(), name='token-refresh'),
+    path('auth/logout/', LogoutView.as_view(), name='logout'),
+    path('auth/me/', MeView.as_view(), name='me'),
+
     # Grupos
     path('grupos/', GrupoListView.as_view(), name='grupo-list'),
     path('grupos/<str:id>/', GrupoDetailView.as_view(), name='grupo-detail'),
