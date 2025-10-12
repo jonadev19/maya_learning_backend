@@ -7,18 +7,49 @@ from .models import Grupo, Administrador, Alumno, Usuario
 from .serializers import (
     GrupoSerializer,
     AdministradorSerializer,
+    AdministradorCreateSerializer,
     AlumnoSerializer,
+    AlumnoCreateSerializer,
     UsuarioSerializer
 )
 
 
 class GrupoListView(APIView):
-    """GET /api/grupos/ - Lista todos los grupos"""
+    """
+    GET /api/grupos/ - Lista todos los grupos
+    POST /api/grupos/ - Crea un nuevo grupo
+    """
 
     def get(self, request):
         grupos = Grupo.listar_activos()
         serializer = GrupoSerializer(grupos, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        try:
+            nombre = request.data.get('nombre')
+            descripcion = request.data.get('descripcion', '')
+
+            if not nombre:
+                return Response(
+                    {'error': 'El nombre del grupo es requerido'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            grupo_id = Grupo.crear(nombre, descripcion)
+            grupo = Grupo.find_one({'_id': grupo_id})
+            serializer = GrupoSerializer(grupo)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class GrupoDetailView(APIView):
@@ -42,12 +73,41 @@ class GrupoDetailView(APIView):
 
 
 class AdministradorListView(APIView):
-    """GET /api/administradores/ - Lista todos los administradores"""
+    """
+    GET /api/administradores/ - Lista todos los administradores
+    POST /api/administradores/ - Crea un nuevo administrador
+    """
 
     def get(self, request):
         admins = Administrador.listar_todos()
         serializer = AdministradorSerializer(admins, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AdministradorCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            admin_id = Administrador.crear_admin(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password'],
+                nombre=serializer.validated_data['nombre'],
+                apellido=serializer.validated_data['apellido']
+            )
+            admin = Administrador.obtener_por_id(admin_id)
+            response_serializer = AdministradorSerializer(admin)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class AdministradorDetailView(APIView):
@@ -71,7 +131,10 @@ class AdministradorDetailView(APIView):
 
 
 class AlumnoListView(APIView):
-    """GET /api/alumnos/ - Lista todos los alumnos"""
+    """
+    GET /api/alumnos/ - Lista todos los alumnos
+    POST /api/alumnos/ - Crea un nuevo alumno
+    """
 
     def get(self, request):
         # Filtros opcionales via query params
@@ -87,6 +150,34 @@ class AlumnoListView(APIView):
 
         serializer = AlumnoSerializer(alumnos, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = AlumnoCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            alumno_id = Alumno.crear_alumno(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password'],
+                nombre=serializer.validated_data['nombre'],
+                apellido=serializer.validated_data['apellido'],
+                grupo_id=serializer.validated_data['grupo_id'],
+                nivel=serializer.validated_data.get('nivel', 'Básico')
+            )
+            alumno = Alumno.obtener_por_id(alumno_id)
+            response_serializer = AlumnoSerializer(alumno)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class AlumnoDetailView(APIView):

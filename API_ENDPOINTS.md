@@ -37,6 +37,29 @@ GET /api/grupos/
 ]
 ```
 
+#### Crear un nuevo grupo
+```
+POST /api/grupos/
+```
+**Cuerpo de la petición:**
+```json
+{
+  "nombre": "A",
+  "descripcion": "Grupo A - Turno matutino"
+}
+```
+**Respuesta (201 CREATED):**
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "nombre": "A",
+  "descripcion": "Grupo A - Turno matutino",
+  "activo": true,
+  "creado_en": "2024-01-15T10:30:00Z",
+  "actualizado_en": "2024-01-15T10:30:00Z"
+}
+```
+
 #### Obtener detalle de un grupo
 ```
 GET /api/grupos/<id>/
@@ -570,9 +593,193 @@ GET /api/reportes/<id>/
 
 ---
 
+## Endpoints POST Disponibles
+
+### Usuarios
+
+#### Crear Administrador
+```
+POST /api/administradores/
+```
+**Cuerpo:**
+```json
+{
+  "email": "admin@maya.edu",
+  "password": "admin123",
+  "nombre": "Carlos",
+  "apellido": "López"
+}
+```
+
+#### Crear Alumno
+```
+POST /api/alumnos/
+```
+**Cuerpo:**
+```json
+{
+  "email": "juan.pech@alumno.com",
+  "password": "alumno123",
+  "nombre": "Juan",
+  "apellido": "Pech",
+  "grupo_id": "507f1f77bcf86cd799439012",
+  "nivel": "Básico"
+}
+```
+
+### Contenido
+
+#### Crear Tema
+```
+POST /api/temas/
+```
+**Cuerpo:**
+```json
+{
+  "nombre": "Números",
+  "descripcion": "Aprende los números en maya",
+  "orden": 1
+}
+```
+
+#### Crear Material
+```
+POST /api/materiales/
+```
+**Cuerpo:**
+```json
+{
+  "tema_id": "507f1f77bcf86cd799439011",
+  "nivel": "Básico",
+  "titulo": "Introducción a Números",
+  "contenido": "Este material te enseñará...",
+  "recursos": [],
+  "orden": 0
+}
+```
+
+#### Crear Vocabulario
+```
+POST /api/vocabulario/
+```
+**Cuerpo:**
+```json
+{
+  "tema_id": "507f1f77bcf86cd799439011",
+  "palabra_maya": "peek'",
+  "palabra_espanol": "perro",
+  "pronunciacion": "pe-ek",
+  "imagen_url": "",
+  "audio_url": "",
+  "nivel": "Básico"
+}
+```
+
+### Evaluaciones
+
+#### Crear Actividad
+```
+POST /api/actividades/
+```
+**Cuerpo:**
+```json
+{
+  "tema_id": "507f1f77bcf86cd799439011",
+  "nivel": "Básico",
+  "titulo": "Quiz de Números - Básico",
+  "descripcion": "Evalúa tus conocimientos",
+  "tipo": "opcion_multiple",
+  "duracion_minutos": 10,
+  "orden": 0
+}
+```
+
+#### Agregar Pregunta a Actividad
+```
+POST /api/actividades/<id>/preguntas/
+```
+**Cuerpo:**
+```json
+{
+  "texto": "¿Cómo se dice 'uno' en maya?",
+  "tipo": "opcion_multiple",
+  "opciones": ["hun", "ka'a", "óox", "kan"],
+  "respuesta_correcta": "hun",
+  "puntos": 10
+}
+```
+
+#### Crear Intento de Prueba
+```
+POST /api/intentos/crear/
+```
+**Cuerpo:**
+```json
+{
+  "alumno_id": "507f1f77bcf86cd799439011",
+  "actividad_id": "507f1f77bcf86cd799439012"
+}
+```
+
+#### Registrar Respuesta
+```
+POST /api/intentos/<id>/respuestas/
+```
+**Cuerpo:**
+```json
+{
+  "pregunta_id": "507f1f77bcf86cd799439013",
+  "respuesta_alumno": "hun"
+}
+```
+
+#### Finalizar Intento (Genera calificación automáticamente)
+```
+POST /api/intentos/<id>/finalizar/
+```
+**Sin cuerpo** - Retorna la calificación generada.
+
+#### Crear Calificación desde Intento
+```
+POST /api/calificaciones/crear/
+```
+**Cuerpo:**
+```json
+{
+  "intento_id": "507f1f77bcf86cd799439011"
+}
+```
+
+### Reportes
+
+#### Crear Reporte
+```
+POST /api/reportes/
+```
+**Cuerpo:**
+```json
+{
+  "tipo": "individual",
+  "generado_por_id": "507f1f77bcf86cd799439011",
+  "titulo": "Reporte Individual - Juan Pech",
+  "descripcion": "Calificaciones del alumno",
+  "alumno_id": "507f1f77bcf86cd799439012",
+  "grupo_nombre": null,
+  "tema_nombre": null,
+  "archivo_url": "/media/reportes/reporte_123.pdf",
+  "metadatos": {
+    "fecha_inicio": "2024-01-01",
+    "fecha_fin": "2024-01-31"
+  }
+}
+```
+
+---
+
 ## Códigos de Estado HTTP
 
 - `200 OK` - Solicitud exitosa
+- `201 CREATED` - Recurso creado exitosamente
 - `400 Bad Request` - Parámetros inválidos
 - `404 Not Found` - Recurso no encontrado
 - `500 Internal Server Error` - Error del servidor

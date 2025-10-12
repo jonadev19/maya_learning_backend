@@ -4,11 +4,14 @@ from rest_framework import status
 from bson import ObjectId
 
 from .models import ReporteGenerado
-from .serializers import ReporteGeneradoSerializer
+from .serializers import ReporteGeneradoSerializer, ReporteGeneradoCreateSerializer
 
 
 class ReporteListView(APIView):
-    """GET /api/reportes/ - Lista todos los reportes generados"""
+    """
+    GET /api/reportes/ - Lista todos los reportes generados
+    POST /api/reportes/ - Crea un nuevo registro de reporte
+    """
 
     def get(self, request):
         # Filtros opcionales
@@ -36,6 +39,37 @@ class ReporteListView(APIView):
 
         serializer = ReporteGeneradoSerializer(reportes, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ReporteGeneradoCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            reporte_id = ReporteGenerado.crear(
+                tipo=serializer.validated_data['tipo'],
+                generado_por_id=serializer.validated_data['generado_por_id'],
+                titulo=serializer.validated_data['titulo'],
+                descripcion=serializer.validated_data.get('descripcion', ''),
+                alumno_id=serializer.validated_data.get('alumno_id'),
+                grupo_nombre=serializer.validated_data.get('grupo_nombre'),
+                tema_nombre=serializer.validated_data.get('tema_nombre'),
+                archivo_url=serializer.validated_data.get('archivo_url', ''),
+                metadatos=serializer.validated_data.get('metadatos', {})
+            )
+            reporte = ReporteGenerado.obtener_por_id(reporte_id)
+            response_serializer = ReporteGeneradoSerializer(reporte)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class ReporteDetailView(APIView):
