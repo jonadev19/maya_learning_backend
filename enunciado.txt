@@ -1,0 +1,16 @@
+proyecto numero 1 
+
+crear una aplicación movil para la enseñanza del 
+lenguaje maya, los temas que deberá contener son : números, comidas, objetos cotidianos y animales.
+la aplicación deberá contar con el rol de administrador que
+será el profesor y el rol de alumno.
+
+rol de administrador : podrá dar de alta, baja, actualizar los datos de los alumnos, podrá ver las calificaciones de los alumnos en cada uno de los temas. 
+tendrá que crear reportes en formato pdf. 
+calificaciones individuales, calificación por grupos.
+
+se contara con grupos A,B y con niveles Básico, Intermedio, Avanzado. para cada uno de los temas. 
+
+los alumnos tendrás que iniciar sesión con los datos proporcionados por el administrador, realizaran sus actividades
+y obtendrán un puntaje. 
+antes de cada actividad deberá haber información con respecto al tema. Sera usando django y la base debe estar en mongo DB
