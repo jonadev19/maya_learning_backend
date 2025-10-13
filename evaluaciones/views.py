@@ -14,6 +14,7 @@ from .serializers import (
     CalificacionSerializer,
     EstadisticasSerializer
 )
+from usuarios.permissions import IsAdminOrReadOnly, IsAuthenticated
 
 
 class ActividadListView(APIView):
@@ -21,6 +22,8 @@ class ActividadListView(APIView):
     GET /api/actividades/ - Lista todas las actividades
     POST /api/actividades/ - Crea una nueva actividad
     """
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         # Filtros opcionales
@@ -69,6 +72,8 @@ class ActividadListView(APIView):
 
 class ActividadDetailView(APIView):
     """GET /api/actividades/<id>/ - Detalle de una actividad"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, id):
         try:
@@ -89,6 +94,8 @@ class ActividadDetailView(APIView):
 
 class IntentoPruebaListView(APIView):
     """GET /api/intentos/ - Lista intentos de prueba"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         # Filtros opcionales
@@ -108,6 +115,8 @@ class IntentoPruebaListView(APIView):
 
 class IntentoPruebaDetailView(APIView):
     """GET /api/intentos/<id>/ - Detalle de un intento"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         try:
@@ -128,6 +137,8 @@ class IntentoPruebaDetailView(APIView):
 
 class CalificacionListView(APIView):
     """GET /api/calificaciones/ - Lista calificaciones"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         # Filtros opcionales
@@ -153,6 +164,8 @@ class CalificacionListView(APIView):
 
 class CalificacionDetailView(APIView):
     """GET /api/calificaciones/<id>/ - Detalle de una calificación"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         try:
@@ -173,6 +186,8 @@ class CalificacionDetailView(APIView):
 
 class PromedioAlumnoView(APIView):
     """GET /api/calificaciones/promedio/<alumno_id>/ - Promedio de un alumno"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, alumno_id):
         try:
@@ -193,6 +208,8 @@ class PromedioAlumnoView(APIView):
 
 class PromedioGrupoView(APIView):
     """GET /api/calificaciones/promedio-grupo/<grupo_nombre>/ - Promedio de un grupo"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, grupo_nombre):
         try:
@@ -213,6 +230,8 @@ class PromedioGrupoView(APIView):
 
 class EstadisticasTemaView(APIView):
     """GET /api/calificaciones/estadisticas/<tema_nombre>/ - Estadísticas de un tema"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, tema_nombre):
         try:
@@ -230,6 +249,8 @@ class EstadisticasTemaView(APIView):
 
 class ActividadPreguntasView(APIView):
     """POST /api/actividades/<id>/preguntas/ - Agrega una pregunta a una actividad"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def post(self, request, id):
         serializer = PreguntaCreateSerializer(data=request.data)
@@ -262,6 +283,8 @@ class ActividadPreguntasView(APIView):
 
 class IntentoPruebaCreateView(APIView):
     """POST /api/intentos/ - Crea un nuevo intento de prueba"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = IntentoPruebaCreateSerializer(data=request.data)
@@ -290,6 +313,8 @@ class IntentoPruebaCreateView(APIView):
 
 class IntentoRespuestasView(APIView):
     """POST /api/intentos/<id>/respuestas/ - Registra una respuesta en un intento"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, id):
         serializer = RegistrarRespuestaSerializer(data=request.data)
@@ -351,6 +376,8 @@ class IntentoRespuestasView(APIView):
 
 class IntentoFinalizarView(APIView):
     """POST /api/intentos/<id>/finalizar/ - Finaliza un intento y genera calificación"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, id):
         try:
@@ -390,6 +417,8 @@ class IntentoFinalizarView(APIView):
 
 class CalificacionCreateView(APIView):
     """POST /api/calificaciones/ - Crea una calificación desde un intento"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         intento_id = request.data.get('intento_id')

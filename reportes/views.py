@@ -5,6 +5,7 @@ from bson import ObjectId
 
 from .models import ReporteGenerado
 from .serializers import ReporteGeneradoSerializer, ReporteGeneradoCreateSerializer
+from usuarios.permissions import IsAuthenticated
 
 
 class ReporteListView(APIView):
@@ -12,6 +13,8 @@ class ReporteListView(APIView):
     GET /api/reportes/ - Lista todos los reportes generados
     POST /api/reportes/ - Crea un nuevo registro de reporte
     """
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         # Filtros opcionales
@@ -74,6 +77,8 @@ class ReporteListView(APIView):
 
 class ReporteDetailView(APIView):
     """GET /api/reportes/<id>/ - Detalle de un reporte"""
+    authentication_classes = []
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         try:

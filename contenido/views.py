@@ -12,6 +12,7 @@ from .serializers import (
     VocabularioSerializer,
     VocabularioCreateSerializer
 )
+from usuarios.permissions import IsAdminOrReadOnly
 
 
 class TemaListView(APIView):
@@ -19,6 +20,8 @@ class TemaListView(APIView):
     GET /api/temas/ - Lista todos los temas
     POST /api/temas/ - Crea un nuevo tema
     """
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         temas = Tema.listar_activos()
@@ -53,6 +56,8 @@ class TemaListView(APIView):
 
 class TemaDetailView(APIView):
     """GET /api/temas/<id>/ - Detalle de un tema"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, id):
         try:
@@ -76,6 +81,8 @@ class MaterialListView(APIView):
     GET /api/materiales/ - Lista todos los materiales
     POST /api/materiales/ - Crea un nuevo material
     """
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         # Filtros opcionales
@@ -125,6 +132,8 @@ class MaterialListView(APIView):
 
 class MaterialDetailView(APIView):
     """GET /api/materiales/<id>/ - Detalle de un material"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, id):
         try:
@@ -148,6 +157,8 @@ class VocabularioListView(APIView):
     GET /api/vocabulario/ - Lista palabras del vocabulario
     POST /api/vocabulario/ - Crea una nueva palabra del vocabulario
     """
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         # Filtros opcionales
@@ -199,6 +210,8 @@ class VocabularioListView(APIView):
 
 class VocabularioDetailView(APIView):
     """GET /api/vocabulario/<id>/ - Detalle de una palabra"""
+    authentication_classes = []
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, id):
         try:
