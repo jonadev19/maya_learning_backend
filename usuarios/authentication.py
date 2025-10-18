@@ -47,16 +47,24 @@ class LoginView(APIView):
         refresh['nombre'] = usuario['nombre']
         refresh['apellido'] = usuario['apellido']
 
+        # Construir el objeto de usuario para la respuesta
+        user_data = {
+            'id': str(usuario['_id']),
+            'email': usuario['email'],
+            'nombre': usuario['nombre'],
+            'apellido': usuario['apellido'],
+            'rol': usuario['rol']
+        }
+
+        # Si el usuario es un alumno, agregar campos adicionales
+        if usuario['rol'] == Usuario.ROLES['ALUMNO']:
+            user_data['grupo_nombre'] = usuario.get('grupo_nombre')
+            user_data['nivel'] = usuario.get('nivel')
+
         return Response({
             'access': str(refresh.access_token),
             'refresh': str(refresh),
-            'user': {
-                'id': str(usuario['_id']),
-                'email': usuario['email'],
-                'nombre': usuario['nombre'],
-                'apellido': usuario['apellido'],
-                'rol': usuario['rol']
-            }
+            'user': user_data
         }, status=status.HTTP_200_OK)
 
 
@@ -149,14 +157,22 @@ class MeView(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
 
-            return Response({
+            # Construir el objeto de usuario para la respuesta
+            user_data = {
                 'id': str(usuario['_id']),
                 'email': usuario['email'],
                 'nombre': usuario['nombre'],
                 'apellido': usuario['apellido'],
                 'rol': usuario['rol'],
                 'activo': usuario.get('activo', True)
-            }, status=status.HTTP_200_OK)
+            }
+
+            # Si el usuario es un alumno, agregar campos adicionales
+            if usuario['rol'] == Usuario.ROLES['ALUMNO']:
+                user_data['grupo_nombre'] = usuario.get('grupo_nombre')
+                user_data['nivel'] = usuario.get('nivel')
+
+            return Response(user_data, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(
