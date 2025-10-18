@@ -57,7 +57,11 @@ class GrupoListView(APIView):
 
 
 class GrupoDetailView(APIView):
-    """GET /api/grupos/<id>/ - Detalle de un grupo"""
+    """
+    GET /api/grupos/<id>/ - Detalle de un grupo
+    PUT /api/grupos/<id>/ - Actualiza un grupo
+    DELETE /api/grupos/<id>/ - Elimina un grupo (soft delete)
+    """
     authentication_classes = []
     permission_classes = [IsAdminOrReadOnly]
 
@@ -71,6 +75,57 @@ class GrupoDetailView(APIView):
                 )
             serializer = GrupoSerializer(grupo)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            grupo = Grupo.find_one({'_id': ObjectId(id)})
+            if not grupo:
+                return Response(
+                    {'error': 'Grupo no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'descripcion' in request.data:
+                datos_actualizacion['descripcion'] = request.data['descripcion']
+            if 'activo' in request.data:
+                datos_actualizacion['activo'] = request.data['activo']
+
+            # Actualizar el grupo
+            Grupo.update_one({'_id': ObjectId(id)}, datos_actualizacion)
+
+            # Retornar el grupo actualizado
+            grupo_actualizado = Grupo.find_one({'_id': ObjectId(id)})
+            serializer = GrupoSerializer(grupo_actualizado)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            grupo = Grupo.find_one({'_id': ObjectId(id)})
+            if not grupo:
+                return Response(
+                    {'error': 'Grupo no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Soft delete - marcar como inactivo
+            Grupo.update_one({'_id': ObjectId(id)}, {'activo': False})
+
+            return Response(
+                {'message': 'Grupo eliminado exitosamente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},
@@ -119,7 +174,11 @@ class AdministradorListView(APIView):
 
 
 class AdministradorDetailView(APIView):
-    """GET /api/administradores/<id>/ - Detalle de un administrador"""
+    """
+    GET /api/administradores/<id>/ - Detalle de un administrador
+    PUT /api/administradores/<id>/ - Actualiza un administrador
+    DELETE /api/administradores/<id>/ - Elimina un administrador (soft delete)
+    """
     authentication_classes = []
     permission_classes = [IsAdmin]
 
@@ -133,6 +192,71 @@ class AdministradorDetailView(APIView):
                 )
             serializer = AdministradorSerializer(admin)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            admin = Administrador.obtener_por_id(id)
+            if not admin:
+                return Response(
+                    {'error': 'Administrador no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'nombre' in request.data:
+                datos_actualizacion['nombre'] = request.data['nombre']
+            if 'apellido' in request.data:
+                datos_actualizacion['apellido'] = request.data['apellido']
+            if 'email' in request.data:
+                # Verificar que el email no esté en uso por otro usuario
+                email_existente = Usuario.find_one({'email': request.data['email']})
+                if email_existente and str(email_existente['_id']) != str(id):
+                    return Response(
+                        {'error': 'El email ya está en uso'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                datos_actualizacion['email'] = request.data['email']
+            if 'activo' in request.data:
+                datos_actualizacion['activo'] = request.data['activo']
+            if 'password' in request.data:
+                from django.contrib.auth.hashers import make_password
+                datos_actualizacion['password'] = make_password(request.data['password'])
+
+            # Actualizar el administrador
+            Administrador.update_one({'_id': ObjectId(id)}, datos_actualizacion)
+
+            # Retornar el administrador actualizado
+            admin_actualizado = Administrador.obtener_por_id(id)
+            serializer = AdministradorSerializer(admin_actualizado)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            admin = Administrador.obtener_por_id(id)
+            if not admin:
+                return Response(
+                    {'error': 'Administrador no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Soft delete - marcar como inactivo
+            Administrador.update_one({'_id': ObjectId(id)}, {'activo': False})
+
+            return Response(
+                {'message': 'Administrador eliminado exitosamente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},
@@ -193,7 +317,11 @@ class AlumnoListView(APIView):
 
 
 class AlumnoDetailView(APIView):
-    """GET /api/alumnos/<id>/ - Detalle de un alumno"""
+    """
+    GET /api/alumnos/<id>/ - Detalle de un alumno
+    PUT /api/alumnos/<id>/ - Actualiza un alumno
+    DELETE /api/alumnos/<id>/ - Elimina un alumno (soft delete)
+    """
     authentication_classes = []
     permission_classes = [IsAdminOrReadOnly]
 
@@ -207,6 +335,90 @@ class AlumnoDetailView(APIView):
                 )
             serializer = AlumnoSerializer(alumno)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            alumno = Alumno.obtener_por_id(id)
+            if not alumno:
+                return Response(
+                    {'error': 'Alumno no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'nombre' in request.data:
+                datos_actualizacion['nombre'] = request.data['nombre']
+            if 'apellido' in request.data:
+                datos_actualizacion['apellido'] = request.data['apellido']
+            if 'email' in request.data:
+                # Verificar que el email no esté en uso por otro usuario
+                email_existente = Usuario.find_one({'email': request.data['email']})
+                if email_existente and str(email_existente['_id']) != str(id):
+                    return Response(
+                        {'error': 'El email ya está en uso'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                datos_actualizacion['email'] = request.data['email']
+            if 'activo' in request.data:
+                datos_actualizacion['activo'] = request.data['activo']
+            if 'password' in request.data:
+                from django.contrib.auth.hashers import make_password
+                datos_actualizacion['password'] = make_password(request.data['password'])
+            if 'nivel' in request.data:
+                if request.data['nivel'] not in Alumno.NIVELES:
+                    return Response(
+                        {'error': f"Nivel debe ser uno de: {', '.join(Alumno.NIVELES)}"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                datos_actualizacion['nivel'] = request.data['nivel']
+            if 'grupo_id' in request.data:
+                grupo_id = request.data['grupo_id']
+                if isinstance(grupo_id, str):
+                    grupo_id = ObjectId(grupo_id)
+                grupo = Grupo.find_one({'_id': grupo_id})
+                if not grupo:
+                    return Response(
+                        {'error': 'El grupo especificado no existe'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                datos_actualizacion['grupo_id'] = grupo_id
+                datos_actualizacion['grupo_nombre'] = grupo['nombre']
+
+            # Actualizar el alumno
+            Alumno.update_one({'_id': ObjectId(id)}, datos_actualizacion)
+
+            # Retornar el alumno actualizado
+            alumno_actualizado = Alumno.obtener_por_id(id)
+            serializer = AlumnoSerializer(alumno_actualizado)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            alumno = Alumno.obtener_por_id(id)
+            if not alumno:
+                return Response(
+                    {'error': 'Alumno no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Soft delete - marcar como inactivo
+            Alumno.update_one({'_id': ObjectId(id)}, {'activo': False})
+
+            return Response(
+                {'message': 'Alumno eliminado exitosamente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},

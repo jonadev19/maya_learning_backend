@@ -71,7 +71,11 @@ class ActividadListView(APIView):
 
 
 class ActividadDetailView(APIView):
-    """GET /api/actividades/<id>/ - Detalle de una actividad"""
+    """
+    GET /api/actividades/<id>/ - Detalle de una actividad
+    PUT /api/actividades/<id>/ - Actualiza una actividad
+    DELETE /api/actividades/<id>/ - Elimina una actividad (soft delete)
+    """
     authentication_classes = []
     permission_classes = [IsAdminOrReadOnly]
 
@@ -85,6 +89,74 @@ class ActividadDetailView(APIView):
                 )
             serializer = ActividadSerializer(actividad)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            actividad = Actividad.obtener_por_id(id)
+            if not actividad:
+                return Response(
+                    {'error': 'Actividad no encontrada'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'tema_id' in request.data:
+                datos_actualizacion['tema_id'] = request.data['tema_id']
+            if 'nivel' in request.data:
+                datos_actualizacion['nivel'] = request.data['nivel']
+            if 'titulo' in request.data:
+                datos_actualizacion['titulo'] = request.data['titulo']
+            if 'descripcion' in request.data:
+                datos_actualizacion['descripcion'] = request.data['descripcion']
+            if 'tipo' in request.data:
+                datos_actualizacion['tipo'] = request.data['tipo']
+            if 'duracion_minutos' in request.data:
+                datos_actualizacion['duracion_minutos'] = request.data['duracion_minutos']
+            if 'orden' in request.data:
+                datos_actualizacion['orden'] = request.data['orden']
+            if 'activo' in request.data:
+                datos_actualizacion['activo'] = request.data['activo']
+
+            # Actualizar la actividad
+            Actividad.actualizar(id, datos_actualizacion)
+
+            # Retornar la actividad actualizada
+            actividad_actualizada = Actividad.obtener_por_id(id)
+            serializer = ActividadSerializer(actividad_actualizada)
+            return Response(serializer.data)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            actividad = Actividad.obtener_por_id(id)
+            if not actividad:
+                return Response(
+                    {'error': 'Actividad no encontrada'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Soft delete - marcar como inactivo
+            Actividad.actualizar(id, {'activo': False})
+
+            return Response(
+                {'message': 'Actividad eliminada exitosamente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},

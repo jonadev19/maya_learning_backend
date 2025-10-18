@@ -156,16 +156,21 @@ Los endpoints tienen diferentes niveles de permisos:
 
 #### Permisos por Endpoint:
 
-| Endpoint | GET | POST | PUT/PATCH | DELETE |
-|----------|-----|------|-----------|--------|
+| Endpoint | GET | POST | PUT | DELETE |
+|----------|-----|------|-----|--------|
 | `/auth/login/` | - | Público | - | - |
 | `/auth/refresh/` | - | Público | - | - |
 | `/auth/logout/` | - | Autenticado | - | - |
 | `/auth/me/` | Autenticado | - | - | - |
-| `/grupos/` | Autenticado | Admin | - | - |
-| `/administradores/` | Admin | Admin | - | - |
-| `/alumnos/` | Autenticado | Admin | - | - |
+| `/grupos/` | Autenticado | Admin | Admin | Admin |
+| `/administradores/` | Admin | Admin | Admin | Admin |
+| `/alumnos/` | Autenticado | Admin | Admin | Admin |
 | `/usuarios/` | Autenticado | - | - | - |
+| `/temas/` | Autenticado | Admin | Admin | Admin |
+| `/materiales/` | Autenticado | Admin | Admin | Admin |
+| `/vocabulario/` | Autenticado | Admin | Admin | Admin |
+| `/actividades/` | Autenticado | Admin | Admin | Admin |
+| `/reportes/` | Autenticado | Autenticado | Autenticado | Autenticado |
 
 ---
 
@@ -927,6 +932,241 @@ POST /api/reportes/
   }
 }
 ```
+
+---
+
+## Endpoints PUT Disponibles
+
+Los endpoints PUT permiten actualizar recursos existentes. Solo se actualizan los campos enviados en el cuerpo de la petición.
+
+### Usuarios
+
+#### Actualizar Grupo
+```
+PUT /api/grupos/<id>/
+```
+**Autenticación:** Admin
+**Cuerpo (campos opcionales):**
+```json
+{
+  "descripcion": "Nueva descripción del grupo",
+  "activo": true
+}
+```
+
+#### Actualizar Administrador
+```
+PUT /api/administradores/<id>/
+```
+**Autenticación:** Admin
+**Cuerpo (campos opcionales):**
+```json
+{
+  "nombre": "Carlos",
+  "apellido": "López",
+  "email": "nuevo_email@maya.edu",
+  "password": "nueva_contraseña",
+  "activo": true
+}
+```
+
+#### Actualizar Alumno
+```
+PUT /api/alumnos/<id>/
+```
+**Autenticación:** Admin
+**Cuerpo (campos opcionales):**
+```json
+{
+  "nombre": "Juan",
+  "apellido": "Pech",
+  "email": "nuevo_email@alumno.com",
+  "password": "nueva_contraseña",
+  "nivel": "Intermedio",
+  "grupo_id": "507f1f77bcf86cd799439012",
+  "activo": true
+}
+```
+
+### Contenido
+
+#### Actualizar Tema
+```
+PUT /api/temas/<id>/
+```
+**Autenticación:** Admin
+**Cuerpo (campos opcionales):**
+```json
+{
+  "nombre": "Números",
+  "descripcion": "Nueva descripción",
+  "orden": 2,
+  "activo": true
+}
+```
+
+#### Actualizar Material
+```
+PUT /api/materiales/<id>/
+```
+**Autenticación:** Admin
+**Cuerpo (campos opcionales):**
+```json
+{
+  "tema_id": "507f1f77bcf86cd799439011",
+  "nivel": "Intermedio",
+  "titulo": "Nuevo título",
+  "contenido": "Nuevo contenido",
+  "recursos": [],
+  "orden": 1,
+  "activo": true
+}
+```
+
+#### Actualizar Vocabulario
+```
+PUT /api/vocabulario/<id>/
+```
+**Autenticación:** Admin
+**Cuerpo (campos opcionales):**
+```json
+{
+  "tema_id": "507f1f77bcf86cd799439011",
+  "palabra_maya": "peek'",
+  "palabra_espanol": "perro",
+  "pronunciacion": "pe-ek",
+  "imagen_url": "/media/peek.jpg",
+  "audio_url": "/media/peek.mp3",
+  "nivel": "Básico",
+  "activo": true
+}
+```
+
+### Evaluaciones
+
+#### Actualizar Actividad
+```
+PUT /api/actividades/<id>/
+```
+**Autenticación:** Admin
+**Cuerpo (campos opcionales):**
+```json
+{
+  "tema_id": "507f1f77bcf86cd799439011",
+  "nivel": "Intermedio",
+  "titulo": "Nuevo título",
+  "descripcion": "Nueva descripción",
+  "tipo": "opcion_multiple",
+  "duracion_minutos": 15,
+  "orden": 1,
+  "activo": true
+}
+```
+
+### Reportes
+
+#### Actualizar Reporte
+```
+PUT /api/reportes/<id>/
+```
+**Autenticación:** Autenticado
+**Cuerpo (campos opcionales):**
+```json
+{
+  "tipo": "individual",
+  "titulo": "Nuevo título",
+  "descripcion": "Nueva descripción",
+  "archivo_url": "/media/reportes/nuevo_reporte.pdf",
+  "metadatos": {
+    "fecha_inicio": "2024-01-01",
+    "fecha_fin": "2024-01-31"
+  }
+}
+```
+
+---
+
+## Endpoints DELETE Disponibles
+
+Los endpoints DELETE permiten eliminar recursos. La mayoría usan **soft delete** (marcan como inactivo), excepto reportes que usa **hard delete** (eliminación permanente).
+
+### Usuarios
+
+#### Eliminar Grupo
+```
+DELETE /api/grupos/<id>/
+```
+**Autenticación:** Admin
+**Soft Delete:** Marca el grupo como inactivo
+**Respuesta (200 OK):**
+```json
+{
+  "message": "Grupo eliminado exitosamente"
+}
+```
+
+#### Eliminar Administrador
+```
+DELETE /api/administradores/<id>/
+```
+**Autenticación:** Admin
+**Soft Delete:** Marca el administrador como inactivo
+
+#### Eliminar Alumno
+```
+DELETE /api/alumnos/<id>/
+```
+**Autenticación:** Admin
+**Soft Delete:** Marca el alumno como inactivo
+
+### Contenido
+
+#### Eliminar Tema
+```
+DELETE /api/temas/<id>/
+```
+**Autenticación:** Admin
+**Soft Delete:** Marca el tema como inactivo
+
+#### Eliminar Material
+```
+DELETE /api/materiales/<id>/
+```
+**Autenticación:** Admin
+**Soft Delete:** Marca el material como inactivo
+
+#### Eliminar Vocabulario
+```
+DELETE /api/vocabulario/<id>/
+```
+**Autenticación:** Admin
+**Soft Delete:** Marca la palabra como inactiva
+
+### Evaluaciones
+
+#### Eliminar Actividad
+```
+DELETE /api/actividades/<id>/
+```
+**Autenticación:** Admin
+**Soft Delete:** Marca la actividad como inactiva
+
+### Reportes
+
+#### Eliminar Reporte
+```
+DELETE /api/reportes/<id>/
+```
+**Autenticación:** Autenticado
+**Hard Delete:** Elimina el reporte permanentemente de la base de datos
+**Respuesta (200 OK):**
+```json
+{
+  "message": "Reporte eliminado permanentemente"
+}
+```
+
+**Nota:** Los reportes usan eliminación permanente (hard delete) ya que son registros históricos que, una vez eliminados, no necesitan ser recuperados.
 
 ---
 

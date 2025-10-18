@@ -72,3 +72,21 @@ class ReporteGenerado(MongoDBModel):
     def listar_recientes(cls, limite=10):
         """Lista los reportes más recientes"""
         return cls.find({}, sort=[('fecha_generacion', -1)], limit=limite)
+
+    @classmethod
+    def actualizar(cls, reporte_id, datos):
+        """Actualiza un reporte"""
+        if isinstance(reporte_id, str):
+            reporte_id = ObjectId(reporte_id)
+
+        # Si se actualiza el tipo, validar
+        if 'tipo' in datos and datos['tipo'] not in cls.TIPOS_REPORTE:
+            raise ValueError(f"Tipo debe ser uno de: {', '.join(cls.TIPOS_REPORTE)}")
+
+        # Convertir IDs a ObjectId si son strings
+        if 'generado_por_id' in datos and isinstance(datos['generado_por_id'], str):
+            datos['generado_por_id'] = ObjectId(datos['generado_por_id'])
+        if 'alumno_id' in datos and isinstance(datos['alumno_id'], str) and datos['alumno_id']:
+            datos['alumno_id'] = ObjectId(datos['alumno_id'])
+
+        return cls.update_one({'_id': reporte_id}, datos)

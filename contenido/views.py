@@ -55,7 +55,11 @@ class TemaListView(APIView):
 
 
 class TemaDetailView(APIView):
-    """GET /api/temas/<id>/ - Detalle de un tema"""
+    """
+    GET /api/temas/<id>/ - Detalle de un tema
+    PUT /api/temas/<id>/ - Actualiza un tema
+    DELETE /api/temas/<id>/ - Elimina un tema (soft delete)
+    """
     authentication_classes = []
     permission_classes = [IsAdminOrReadOnly]
 
@@ -69,6 +73,71 @@ class TemaDetailView(APIView):
                 )
             serializer = TemaSerializer(tema)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            tema = Tema.find_one({'_id': ObjectId(id)})
+            if not tema:
+                return Response(
+                    {'error': 'Tema no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'nombre' in request.data:
+                if request.data['nombre'] not in Tema.TEMAS_VALIDOS:
+                    return Response(
+                        {'error': f"Tema debe ser uno de: {', '.join(Tema.TEMAS_VALIDOS)}"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                datos_actualizacion['nombre'] = request.data['nombre']
+            if 'descripcion' in request.data:
+                datos_actualizacion['descripcion'] = request.data['descripcion']
+            if 'orden' in request.data:
+                datos_actualizacion['orden'] = request.data['orden']
+            if 'activo' in request.data:
+                datos_actualizacion['activo'] = request.data['activo']
+
+            # Actualizar el tema
+            Tema.actualizar(id, datos_actualizacion)
+
+            # Retornar el tema actualizado
+            tema_actualizado = Tema.find_one({'_id': ObjectId(id)})
+            serializer = TemaSerializer(tema_actualizado)
+            return Response(serializer.data)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            tema = Tema.find_one({'_id': ObjectId(id)})
+            if not tema:
+                return Response(
+                    {'error': 'Tema no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Soft delete - marcar como inactivo
+            Tema.actualizar(id, {'activo': False})
+
+            return Response(
+                {'message': 'Tema eliminado exitosamente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},
@@ -131,7 +200,11 @@ class MaterialListView(APIView):
 
 
 class MaterialDetailView(APIView):
-    """GET /api/materiales/<id>/ - Detalle de un material"""
+    """
+    GET /api/materiales/<id>/ - Detalle de un material
+    PUT /api/materiales/<id>/ - Actualiza un material
+    DELETE /api/materiales/<id>/ - Elimina un material (soft delete)
+    """
     authentication_classes = []
     permission_classes = [IsAdminOrReadOnly]
 
@@ -145,6 +218,77 @@ class MaterialDetailView(APIView):
                 )
             serializer = MaterialSerializer(material)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            material = Material.obtener_por_id(id)
+            if not material:
+                return Response(
+                    {'error': 'Material no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'tema_id' in request.data:
+                datos_actualizacion['tema_id'] = request.data['tema_id']
+            if 'nivel' in request.data:
+                if request.data['nivel'] not in Material.NIVELES:
+                    return Response(
+                        {'error': f"Nivel debe ser uno de: {', '.join(Material.NIVELES)}"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                datos_actualizacion['nivel'] = request.data['nivel']
+            if 'titulo' in request.data:
+                datos_actualizacion['titulo'] = request.data['titulo']
+            if 'contenido' in request.data:
+                datos_actualizacion['contenido'] = request.data['contenido']
+            if 'recursos' in request.data:
+                datos_actualizacion['recursos'] = request.data['recursos']
+            if 'orden' in request.data:
+                datos_actualizacion['orden'] = request.data['orden']
+            if 'activo' in request.data:
+                datos_actualizacion['activo'] = request.data['activo']
+
+            # Actualizar el material
+            Material.actualizar(id, datos_actualizacion)
+
+            # Retornar el material actualizado
+            material_actualizado = Material.obtener_por_id(id)
+            serializer = MaterialSerializer(material_actualizado)
+            return Response(serializer.data)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            material = Material.obtener_por_id(id)
+            if not material:
+                return Response(
+                    {'error': 'Material no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Soft delete - marcar como inactivo
+            Material.actualizar(id, {'activo': False})
+
+            return Response(
+                {'message': 'Material eliminado exitosamente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},
@@ -209,7 +353,11 @@ class VocabularioListView(APIView):
 
 
 class VocabularioDetailView(APIView):
-    """GET /api/vocabulario/<id>/ - Detalle de una palabra"""
+    """
+    GET /api/vocabulario/<id>/ - Detalle de una palabra
+    PUT /api/vocabulario/<id>/ - Actualiza una palabra
+    DELETE /api/vocabulario/<id>/ - Elimina una palabra (soft delete)
+    """
     authentication_classes = []
     permission_classes = [IsAdminOrReadOnly]
 
@@ -223,6 +371,79 @@ class VocabularioDetailView(APIView):
                 )
             serializer = VocabularioSerializer(palabra)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            palabra = Vocabulario.obtener_por_id(id)
+            if not palabra:
+                return Response(
+                    {'error': 'Palabra no encontrada'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'tema_id' in request.data:
+                datos_actualizacion['tema_id'] = request.data['tema_id']
+            if 'palabra_maya' in request.data:
+                datos_actualizacion['palabra_maya'] = request.data['palabra_maya']
+            if 'palabra_espanol' in request.data:
+                datos_actualizacion['palabra_espanol'] = request.data['palabra_espanol']
+            if 'pronunciacion' in request.data:
+                datos_actualizacion['pronunciacion'] = request.data['pronunciacion']
+            if 'imagen_url' in request.data:
+                datos_actualizacion['imagen_url'] = request.data['imagen_url']
+            if 'audio_url' in request.data:
+                datos_actualizacion['audio_url'] = request.data['audio_url']
+            if 'nivel' in request.data:
+                if request.data['nivel'] not in Material.NIVELES:
+                    return Response(
+                        {'error': f"Nivel debe ser uno de: {', '.join(Material.NIVELES)}"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                datos_actualizacion['nivel'] = request.data['nivel']
+            if 'activo' in request.data:
+                datos_actualizacion['activo'] = request.data['activo']
+
+            # Actualizar el vocabulario
+            Vocabulario.actualizar(id, datos_actualizacion)
+
+            # Retornar la palabra actualizada
+            palabra_actualizada = Vocabulario.obtener_por_id(id)
+            serializer = VocabularioSerializer(palabra_actualizada)
+            return Response(serializer.data)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            palabra = Vocabulario.obtener_por_id(id)
+            if not palabra:
+                return Response(
+                    {'error': 'Palabra no encontrada'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Soft delete - marcar como inactivo
+            Vocabulario.actualizar(id, {'activo': False})
+
+            return Response(
+                {'message': 'Palabra eliminada exitosamente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},

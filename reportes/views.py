@@ -76,7 +76,11 @@ class ReporteListView(APIView):
 
 
 class ReporteDetailView(APIView):
-    """GET /api/reportes/<id>/ - Detalle de un reporte"""
+    """
+    GET /api/reportes/<id>/ - Detalle de un reporte
+    PUT /api/reportes/<id>/ - Actualiza un reporte
+    DELETE /api/reportes/<id>/ - Elimina un reporte permanentemente
+    """
     authentication_classes = []
     permission_classes = [IsAuthenticated]
 
@@ -90,6 +94,74 @@ class ReporteDetailView(APIView):
                 )
             serializer = ReporteGeneradoSerializer(reporte)
             return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def put(self, request, id):
+        try:
+            reporte = ReporteGenerado.obtener_por_id(id)
+            if not reporte:
+                return Response(
+                    {'error': 'Reporte no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Datos que se pueden actualizar
+            datos_actualizacion = {}
+            if 'tipo' in request.data:
+                datos_actualizacion['tipo'] = request.data['tipo']
+            if 'titulo' in request.data:
+                datos_actualizacion['titulo'] = request.data['titulo']
+            if 'descripcion' in request.data:
+                datos_actualizacion['descripcion'] = request.data['descripcion']
+            if 'archivo_url' in request.data:
+                datos_actualizacion['archivo_url'] = request.data['archivo_url']
+            if 'metadatos' in request.data:
+                datos_actualizacion['metadatos'] = request.data['metadatos']
+            if 'alumno_id' in request.data:
+                datos_actualizacion['alumno_id'] = request.data['alumno_id']
+            if 'grupo_nombre' in request.data:
+                datos_actualizacion['grupo_nombre'] = request.data['grupo_nombre']
+            if 'tema_nombre' in request.data:
+                datos_actualizacion['tema_nombre'] = request.data['tema_nombre']
+
+            # Actualizar el reporte
+            ReporteGenerado.actualizar(id, datos_actualizacion)
+
+            # Retornar el reporte actualizado
+            reporte_actualizado = ReporteGenerado.obtener_por_id(id)
+            serializer = ReporteGeneradoSerializer(reporte_actualizado)
+            return Response(serializer.data)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def delete(self, request, id):
+        try:
+            reporte = ReporteGenerado.obtener_por_id(id)
+            if not reporte:
+                return Response(
+                    {'error': 'Reporte no encontrado'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Hard delete - eliminar permanentemente
+            ReporteGenerado.delete_one({'_id': ObjectId(id)})
+
+            return Response(
+                {'message': 'Reporte eliminado permanentemente'},
+                status=status.HTTP_200_OK
+            )
         except Exception as e:
             return Response(
                 {'error': str(e)},

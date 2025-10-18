@@ -143,6 +143,32 @@ class Actividad(MongoDBModel):
             }
         )
 
+    @classmethod
+    def actualizar(cls, actividad_id, datos):
+        """Actualiza una actividad"""
+        if isinstance(actividad_id, str):
+            actividad_id = ObjectId(actividad_id)
+
+        # Si se actualiza el nivel, validar
+        if 'nivel' in datos and datos['nivel'] not in cls.NIVELES:
+            raise ValueError(f"Nivel debe ser uno de: {', '.join(cls.NIVELES)}")
+
+        # Si se actualiza el tipo, validar
+        if 'tipo' in datos and datos['tipo'] not in cls.TIPOS:
+            raise ValueError(f"Tipo debe ser uno de: {', '.join(cls.TIPOS)}")
+
+        # Si se actualiza el tema_id, validar que existe y actualizar tema_nombre
+        if 'tema_id' in datos:
+            tema_id = datos['tema_id']
+            if isinstance(tema_id, str):
+                tema_id = ObjectId(tema_id)
+            tema = Tema.find_one({'_id': tema_id})
+            if not tema:
+                raise ValueError("El tema especificado no existe")
+            datos['tema_nombre'] = tema['nombre']
+
+        return cls.update_one({'_id': actividad_id}, datos)
+
 
 class IntentoPrueba(MongoDBModel):
     """Modelo para registrar cuando un alumno intenta una actividad"""
