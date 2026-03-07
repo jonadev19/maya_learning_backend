@@ -1,6 +1,6 @@
 # 🌟 Maya Learning - Backend API
 
-> Sistema backend para una aplicación móvil de enseñanza del lenguaje maya con gestión de usuarios, contenido educativo, evaluaciones y generación de reportes.
+> Backend system for a mobile application for teaching the Maya language, with user management, educational content, assessments, and report generation.
 
 ![Django](https://img.shields.io/badge/Django-5.2.7-green?style=flat&logo=django)
 ![DRF](https://img.shields.io/badge/Django%20REST%20Framework-3.16.1-red?style=flat)
@@ -9,135 +9,135 @@
 
 ---
 
-## 📖 Descripción del Proyecto
+## 📖 Project Description
 
-**Maya Learning Backend** es una API REST desarrollada con Django y Django REST Framework que sirve como backend para una aplicación móvil educativa dedicada a la enseñanza del lenguaje maya. El sistema permite gestionar usuarios (administradores y alumnos), contenido educativo organizado por temas y niveles, actividades de evaluación, y generación de reportes en PDF.
+**Maya Learning Backend** is a REST API built with Django and Django REST Framework that serves as the backend for an educational mobile application dedicated to teaching the Maya language. The system manages users (administrators and students), educational content organized by topics and levels, assessment activities, and PDF report generation.
 
-### Contexto Educativo
+### Educational Context
 
-El proyecto aborda la necesidad de preservar y enseñar el lenguaje maya mediante una plataforma digital moderna. Los contenidos están organizados en cuatro temas principales:
-- 🔢 **Números** - Números del 0 al 100 en maya
-- 🍽️ **Comidas** - Vocabulario de alimentos tradicionales
-- 🏠 **Objetos Cotidianos** - Elementos del día a día
-- 🦎 **Animales** - Fauna local y regional
-
----
-
-## ✨ Características Principales
-
-### 🔐 Sistema de Autenticación
-- Autenticación JWT (JSON Web Tokens) con access y refresh tokens
-- Sistema de permisos basado en roles (Administrador/Alumno)
-- Gestión segura de contraseñas con hashing
-- Blacklist de tokens para logout seguro
-
-### 👥 Gestión de Usuarios
-- **Administradores**: Profesores con permisos completos
-  - Crear, actualizar y desactivar usuarios
-  - Gestionar contenido educativo
-  - Generar reportes individuales y grupales
-  - Ver calificaciones y estadísticas
-  
-- **Alumnos**: Estudiantes con acceso controlado
-  - Acceder a materiales educativos
-  - Realizar actividades y evaluaciones
-  - Ver su progreso personal
-  - Organizados por grupos (A, B) y niveles (Básico, Intermedio, Avanzado)
-
-### 📚 Contenido Educativo
-- **Temas**: Estructura organizativa de contenidos
-- **Materiales**: Recursos educativos con soporte multimedia
-- **Vocabulario**: Base de datos de palabras en maya con traducciones, pronunciación y recursos audiovisuales
-
-### 📝 Sistema de Evaluaciones
-- **Actividades**: Cuestionarios y ejercicios configurables
-- **Preguntas**: Soporte para múltiples tipos (opción múltiple, verdadero/falso)
-- **Intentos**: Registro detallado de cada intento de evaluación
-- **Calificaciones**: Sistema automático de calificación con cálculo de promedios
-
-### 📊 Reportes y Estadísticas
-- Reportes individuales por alumno
-- Reportes grupales
-- Estadísticas por tema
-- Generación de archivos PDF
-- Cálculo de promedios y porcentajes de aprobación
+The project addresses the need to preserve and teach the Maya language through a modern digital platform. Content is organized into four main topics:
+- 🔢 **Numbers** - Numbers from 0 to 100 in Maya
+- 🍽️ **Foods** - Traditional food vocabulary
+- 🏠 **Everyday Objects** - Day-to-day items
+- 🦎 **Animals** - Local and regional fauna
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## ✨ Key Features
+
+### 🔐 Authentication System
+- JWT (JSON Web Tokens) authentication with access and refresh tokens
+- Role-based permission system (Administrator/Student)
+- Secure password management with hashing
+- Token blacklist for secure logout
+
+### 👥 User Management
+- **Administrators**: Teachers with full permissions
+  - Create, update, and deactivate users
+  - Manage educational content
+  - Generate individual and group reports
+  - View grades and statistics
+
+- **Students**: Learners with controlled access
+  - Access educational materials
+  - Complete activities and assessments
+  - View personal progress
+  - Organized by groups (A, B) and levels (Basic, Intermediate, Advanced)
+
+### 📚 Educational Content
+- **Topics**: Organizational structure for content
+- **Materials**: Educational resources with multimedia support
+- **Vocabulary**: Database of Maya words with translations, pronunciation, and audiovisual resources
+
+### 📝 Assessment System
+- **Activities**: Configurable quizzes and exercises
+- **Questions**: Support for multiple types (multiple choice, true/false)
+- **Attempts**: Detailed record of each assessment attempt
+- **Grades**: Automatic grading system with average calculation
+
+### 📊 Reports and Statistics
+- Individual reports per student
+- Group reports
+- Statistics by topic
+- PDF file generation
+- Average and pass rate calculations
+
+---
+
+## 🛠️ Technologies Used
 
 ### Backend Framework
-- **Django 5.2.7** - Framework web de alto nivel
-- **Django REST Framework 3.16.1** - Toolkit para construcción de APIs REST
+- **Django 5.2.7** - High-level web framework
+- **Django REST Framework 3.16.1** - Toolkit for building REST APIs
 
-### Base de Datos
-- **MongoDB 3.11.4** - Base de datos NoSQL orientada a documentos
-- **PyMongo** - Driver oficial de Python para MongoDB
+### Database
+- **MongoDB 3.11.4** - Document-oriented NoSQL database
+- **PyMongo** - Official Python driver for MongoDB
 
-### Autenticación y Seguridad
-- **djangorestframework-simplejwt 5.5.1** - Autenticación JWT
-- **PyJWT 2.10.1** - Librería de tokens JWT
-- **Django password hashing** - Sistema seguro de hashing de contraseñas
+### Authentication and Security
+- **djangorestframework-simplejwt 5.5.1** - JWT authentication
+- **PyJWT 2.10.1** - JWT token library
+- **Django password hashing** - Secure password hashing system
 
-### Herramientas Adicionales
-- **python-dotenv** - Gestión de variables de entorno
-- **python-decouple** - Separación de configuración del código
-- **pytz** - Manejo de zonas horarias
+### Additional Tools
+- **python-dotenv** - Environment variable management
+- **python-decouple** - Configuration separation from code
+- **pytz** - Timezone handling
 
 ---
 
-## 🏗️ Arquitectura del Sistema
+## 🏗️ System Architecture
 
 ```
 maya-learning-backend/
-├── maya_backend/          # Configuración principal del proyecto Django
-│   ├── settings.py       # Configuración de Django y JWT
-│   ├── urls.py           # Rutas principales
-│   └── wsgi.py           # Punto de entrada WSGI
+├── maya_backend/          # Main Django project configuration
+│   ├── settings.py       # Django and JWT configuration
+│   ├── urls.py           # Main routes
+│   └── wsgi.py           # WSGI entry point
 │
-├── usuarios/             # Aplicación de gestión de usuarios
-│   ├── models.py        # Modelos de Usuario, Grupo
-│   ├── views.py         # Vistas de API para usuarios
-│   ├── serializers.py   # Serializers de DRF
-│   ├── authentication.py # Lógica de autenticación JWT
-│   ├── permissions.py   # Permisos personalizados
-│   └── urls.py          # Rutas de usuarios y auth
+├── usuarios/             # User management application
+│   ├── models.py        # User, Group models
+│   ├── views.py         # API views for users
+│   ├── serializers.py   # DRF serializers
+│   ├── authentication.py # JWT authentication logic
+│   ├── permissions.py   # Custom permissions
+│   └── urls.py          # User and auth routes
 │
-├── contenido/            # Aplicación de contenido educativo
-│   ├── models.py        # Modelos de Tema, Material, Vocabulario
-│   ├── views.py         # Vistas de API para contenido
-│   ├── serializers.py   # Serializers de contenido
-│   └── urls.py          # Rutas de contenido
+├── contenido/            # Educational content application
+│   ├── models.py        # Topic, Material, Vocabulary models
+│   ├── views.py         # API views for content
+│   ├── serializers.py   # Content serializers
+│   └── urls.py          # Content routes
 │
-├── evaluaciones/         # Aplicación de evaluaciones
-│   ├── models.py        # Modelos de Actividad, Intento, Calificación
-│   ├── views.py         # Vistas de API para evaluaciones
-│   ├── serializers.py   # Serializers de evaluaciones
-│   └── urls.py          # Rutas de evaluaciones
+├── evaluaciones/         # Assessments application
+│   ├── models.py        # Activity, Attempt, Grade models
+│   ├── views.py         # API views for assessments
+│   ├── serializers.py   # Assessment serializers
+│   └── urls.py          # Assessment routes
 │
-├── reportes/             # Aplicación de generación de reportes
-│   ├── models.py        # Modelo de Reporte
-│   ├── views.py         # Vistas de API para reportes
-│   ├── serializers.py   # Serializers de reportes
-│   └── urls.py          # Rutas de reportes
+├── reportes/             # Report generation application
+│   ├── models.py        # Report model
+│   ├── views.py         # API views for reports
+│   ├── serializers.py   # Report serializers
+│   └── urls.py          # Report routes
 │
-├── requirements.txt      # Dependencias del proyecto
-├── manage.py            # Script de gestión de Django
-├── db.sqlite3           # Base de datos SQLite (auxiliar)
+├── requirements.txt      # Project dependencies
+├── manage.py            # Django management script
+├── db.sqlite3           # SQLite database (auxiliary)
 │
-└── Documentación/
-    ├── API_ENDPOINTS.md      # Documentación completa de endpoints
-    ├── AUTENTICACION.md      # Guía de autenticación
-    └── GUIA_POSTMAN.md       # Colección de Postman
+└── Documentacion/
+    ├── API_ENDPOINTS.md      # Complete endpoint documentation
+    ├── AUTENTICACION.md      # Authentication guide
+    └── GUIA_POSTMAN.md       # Postman collection
 ```
 
 ---
 
-## 🗄️ Modelo de Datos
+## 🗄️ Data Model
 
-### Colecciones MongoDB
+### MongoDB Collections
 
-#### Usuarios
+#### Users
 ```javascript
 {
   _id: ObjectId,
@@ -145,8 +145,8 @@ maya-learning-backend/
   password: String (hashed),
   nombre: String,
   apellido: String,
-  rol: String, // "administrador" o "alumno"
-  grupo_id: ObjectId, // Solo para alumnos
+  rol: String, // "administrador" or "alumno"
+  grupo_id: ObjectId, // Students only
   nivel: String, // "Básico", "Intermedio", "Avanzado"
   activo: Boolean,
   creado_en: DateTime,
@@ -154,7 +154,7 @@ maya-learning-backend/
 }
 ```
 
-#### Temas
+#### Topics
 ```javascript
 {
   _id: ObjectId,
@@ -166,7 +166,7 @@ maya-learning-backend/
 }
 ```
 
-#### Vocabulario
+#### Vocabulary
 ```javascript
 {
   _id: ObjectId,
@@ -181,7 +181,7 @@ maya-learning-backend/
 }
 ```
 
-#### Actividades
+#### Activities
 ```javascript
 {
   _id: ObjectId,
@@ -197,7 +197,7 @@ maya-learning-backend/
 }
 ```
 
-#### Calificaciones
+#### Grades
 ```javascript
 {
   _id: ObjectId,
@@ -214,44 +214,44 @@ maya-learning-backend/
 
 ---
 
-## 🚀 Instalación y Configuración
+## 🚀 Installation and Setup
 
-### Requisitos Previos
-- Python 3.8 o superior
-- MongoDB 4.0 o superior
-- pip (gestor de paquetes de Python)
-- Entorno virtual (recomendado)
+### Prerequisites
+- Python 3.8 or higher
+- MongoDB 4.0 or higher
+- pip (Python package manager)
+- Virtual environment (recommended)
 
-### Pasos de Instalación
+### Installation Steps
 
-1. **Clonar el repositorio**
+1. **Clone the repository**
 ```bash
 git clone https://github.com/jonadev19/maya_learning_backend.git
 cd maya_learning_backend
 ```
 
-2. **Crear y activar entorno virtual**
+2. **Create and activate virtual environment**
 ```bash
-# En Windows
+# On Windows
 python -m venv venv
 venv\Scripts\activate
 
-# En Linux/Mac
+# On Linux/Mac
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-3. **Instalar dependencias**
+3. **Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Configurar variables de entorno**
+4. **Configure environment variables**
 
-Crear un archivo `.env` en la raíz del proyecto:
+Create a `.env` file in the project root:
 ```env
 # Django
-SECRET_KEY=tu-secret-key-aqui
+SECRET_KEY=your-secret-key-here
 DEBUG=True
 
 # MongoDB
@@ -260,89 +260,89 @@ MONGO_HOST=localhost
 MONGO_PORT=27017
 ```
 
-5. **Ejecutar migraciones**
+5. **Run migrations**
 ```bash
 python manage.py migrate
 ```
 
-6. **Poblar base de datos con datos de ejemplo (opcional)**
+6. **Populate database with sample data (optional)**
 ```bash
 python manage.py poblar_datos
 ```
 
-7. **Iniciar el servidor de desarrollo**
+7. **Start the development server**
 ```bash
 python manage.py runserver
 ```
 
-El servidor estará disponible en `http://localhost:8000/`
+The server will be available at `http://localhost:8000/`
 
 ---
 
 ## 📡 API Endpoints
 
-### Autenticación
+### Authentication
 
-| Método | Endpoint | Descripción | Autenticación |
-|--------|----------|-------------|---------------|
-| POST | `/api/auth/login/` | Iniciar sesión | No requerida |
-| POST | `/api/auth/refresh/` | Refrescar token | No requerida |
-| POST | `/api/auth/logout/` | Cerrar sesión | Requerida |
-| GET | `/api/auth/me/` | Usuario actual | Requerida |
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|----------------|
+| POST | `/api/auth/login/` | Log in | Not required |
+| POST | `/api/auth/refresh/` | Refresh token | Not required |
+| POST | `/api/auth/logout/` | Log out | Required |
+| GET | `/api/auth/me/` | Current user | Required |
 
-### Usuarios
+### Users
 
-| Método | Endpoint | Descripción | Permisos |
-|--------|----------|-------------|----------|
-| GET | `/api/grupos/` | Listar grupos | Autenticado |
-| POST | `/api/grupos/` | Crear grupo | Admin |
-| GET | `/api/administradores/` | Listar admins | Admin |
-| POST | `/api/administradores/` | Crear admin | Admin |
-| GET | `/api/alumnos/` | Listar alumnos | Autenticado |
-| POST | `/api/alumnos/` | Crear alumno | Admin |
-| GET | `/api/alumnos/<id>/` | Detalle alumno | Autenticado |
-| PUT | `/api/alumnos/<id>/` | Actualizar alumno | Admin |
-| DELETE | `/api/alumnos/<id>/` | Desactivar alumno | Admin |
+| Method | Endpoint | Description | Permissions |
+|--------|----------|-------------|-------------|
+| GET | `/api/grupos/` | List groups | Authenticated |
+| POST | `/api/grupos/` | Create group | Admin |
+| GET | `/api/administradores/` | List admins | Admin |
+| POST | `/api/administradores/` | Create admin | Admin |
+| GET | `/api/alumnos/` | List students | Authenticated |
+| POST | `/api/alumnos/` | Create student | Admin |
+| GET | `/api/alumnos/<id>/` | Student detail | Authenticated |
+| PUT | `/api/alumnos/<id>/` | Update student | Admin |
+| DELETE | `/api/alumnos/<id>/` | Deactivate student | Admin |
 
-### Contenido
+### Content
 
-| Método | Endpoint | Descripción | Permisos |
-|--------|----------|-------------|----------|
-| GET | `/api/temas/` | Listar temas | Autenticado |
-| POST | `/api/temas/` | Crear tema | Admin |
-| GET | `/api/materiales/` | Listar materiales | Autenticado |
-| POST | `/api/materiales/` | Crear material | Admin |
-| GET | `/api/vocabulario/` | Listar vocabulario | Autenticado |
-| POST | `/api/vocabulario/` | Crear vocabulario | Admin |
+| Method | Endpoint | Description | Permissions |
+|--------|----------|-------------|-------------|
+| GET | `/api/temas/` | List topics | Authenticated |
+| POST | `/api/temas/` | Create topic | Admin |
+| GET | `/api/materiales/` | List materials | Authenticated |
+| POST | `/api/materiales/` | Create material | Admin |
+| GET | `/api/vocabulario/` | List vocabulary | Authenticated |
+| POST | `/api/vocabulario/` | Create vocabulary | Admin |
 
-### Evaluaciones
+### Assessments
 
-| Método | Endpoint | Descripción | Permisos |
-|--------|----------|-------------|----------|
-| GET | `/api/actividades/` | Listar actividades | Autenticado |
-| POST | `/api/actividades/` | Crear actividad | Admin |
-| POST | `/api/intentos/crear/` | Iniciar evaluación | Autenticado |
-| POST | `/api/intentos/<id>/respuestas/` | Registrar respuesta | Autenticado |
-| POST | `/api/intentos/<id>/finalizar/` | Finalizar evaluación | Autenticado |
-| GET | `/api/calificaciones/` | Listar calificaciones | Autenticado |
-| GET | `/api/calificaciones/promedio/<alumno_id>/` | Promedio alumno | Autenticado |
-| GET | `/api/calificaciones/promedio-grupo/<grupo>/` | Promedio grupo | Autenticado |
+| Method | Endpoint | Description | Permissions |
+|--------|----------|-------------|-------------|
+| GET | `/api/actividades/` | List activities | Authenticated |
+| POST | `/api/actividades/` | Create activity | Admin |
+| POST | `/api/intentos/crear/` | Start assessment | Authenticated |
+| POST | `/api/intentos/<id>/respuestas/` | Submit answer | Authenticated |
+| POST | `/api/intentos/<id>/finalizar/` | Finish assessment | Authenticated |
+| GET | `/api/calificaciones/` | List grades | Authenticated |
+| GET | `/api/calificaciones/promedio/<alumno_id>/` | Student average | Authenticated |
+| GET | `/api/calificaciones/promedio-grupo/<grupo>/` | Group average | Authenticated |
 
-### Reportes
+### Reports
 
-| Método | Endpoint | Descripción | Permisos |
-|--------|----------|-------------|----------|
-| GET | `/api/reportes/` | Listar reportes | Autenticado |
-| POST | `/api/reportes/` | Crear reporte | Autenticado |
-| DELETE | `/api/reportes/<id>/` | Eliminar reporte | Autenticado |
+| Method | Endpoint | Description | Permissions |
+|--------|----------|-------------|-------------|
+| GET | `/api/reportes/` | List reports | Authenticated |
+| POST | `/api/reportes/` | Create report | Authenticated |
+| DELETE | `/api/reportes/<id>/` | Delete report | Authenticated |
 
-**📄 Documentación completa:** Consulta [API_ENDPOINTS.md](API_ENDPOINTS.md) para ejemplos detallados de cada endpoint.
+**📄 Full documentation:** See [API_ENDPOINTS.md](API_ENDPOINTS.md) for detailed examples of each endpoint.
 
 ---
 
-## 🔑 Sistema de Autenticación
+## 🔑 Authentication System
 
-### Login y obtención de tokens
+### Login and token retrieval
 
 ```bash
 curl -X POST http://localhost:8000/api/auth/login/ \
@@ -353,7 +353,7 @@ curl -X POST http://localhost:8000/api/auth/login/ \
   }'
 ```
 
-**Respuesta:**
+**Response:**
 ```json
 {
   "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
@@ -368,20 +368,20 @@ curl -X POST http://localhost:8000/api/auth/login/ \
 }
 ```
 
-### Uso de tokens en requests
+### Using tokens in requests
 
 ```bash
 curl -X GET http://localhost:8000/api/alumnos/ \
   -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
 ```
 
-### Credenciales de Prueba
+### Test Credentials
 
-**Administrador:**
+**Administrator:**
 - Email: `admin@maya.edu`
 - Password: `admin123`
 
-**Alumno:**
+**Student:**
 - Email: `juan.pech@alumno.com`
 - Password: `alumno123`
 
@@ -389,94 +389,94 @@ curl -X GET http://localhost:8000/api/alumnos/ \
 
 ## 🧪 Testing
 
-### Ejecutar tests
+### Run tests
 ```bash
 python manage.py test
 ```
 
-### Probar endpoints con curl
+### Test endpoints with curl
 
-**Listar temas:**
+**List topics:**
 ```bash
 curl -X GET http://localhost:8000/api/temas/ \
-  -H "Authorization: Bearer <tu-access-token>"
+  -H "Authorization: Bearer <your-access-token>"
 ```
 
-**Crear alumno:**
+**Create student:**
 ```bash
 curl -X POST http://localhost:8000/api/alumnos/ \
   -H "Authorization: Bearer <admin-token>" \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "nuevo.alumno@alumno.com",
+    "email": "new.student@alumno.com",
     "password": "password123",
-    "nombre": "Nuevo",
-    "apellido": "Alumno",
+    "nombre": "New",
+    "apellido": "Student",
     "grupo_id": "507f1f77bcf86cd799439012",
     "nivel": "Básico"
   }'
 ```
 
-### Testing con Postman
+### Testing with Postman
 
-Importa la colección disponible en `Maya_Backend_Auth.postman_collection.json` para probar todos los endpoints.
+Import the collection available at `Maya_Backend_Auth.postman_collection.json` to test all endpoints.
 
 ---
 
-## 📊 Ejemplos de Uso
+## 📊 Usage Examples
 
-### Flujo de un Alumno
+### Student Flow
 
 1. **Login**
    ```
    POST /api/auth/login/
    ```
 
-2. **Ver materiales disponibles**
+2. **View available materials**
    ```
-   GET /api/materiales/?tema_id=<tema_numeros>&nivel=Básico
-   ```
-
-3. **Estudiar vocabulario**
-   ```
-   GET /api/vocabulario/?tema_id=<tema_numeros>&nivel=Básico
+   GET /api/materiales/?tema_id=<numbers_topic>&nivel=Básico
    ```
 
-4. **Iniciar actividad**
+3. **Study vocabulary**
+   ```
+   GET /api/vocabulario/?tema_id=<numbers_topic>&nivel=Básico
+   ```
+
+4. **Start activity**
    ```
    POST /api/intentos/crear/
    Body: { "alumno_id": "<id>", "actividad_id": "<id>" }
    ```
 
-5. **Responder preguntas**
+5. **Answer questions**
    ```
    POST /api/intentos/<intento_id>/respuestas/
    Body: { "pregunta_id": "<id>", "respuesta_alumno": "hun" }
    ```
 
-6. **Finalizar y obtener calificación**
+6. **Finish and get grade**
    ```
    POST /api/intentos/<intento_id>/finalizar/
    ```
 
-### Flujo de un Administrador
+### Administrator Flow
 
-1. **Ver estadísticas de grupo**
+1. **View group statistics**
    ```
    GET /api/calificaciones/promedio-grupo/A/
    ```
 
-2. **Generar reporte individual**
+2. **Generate individual report**
    ```
    POST /api/reportes/
    Body: {
      "tipo": "individual",
      "alumno_id": "<id>",
-     "titulo": "Reporte Juan Pech"
+     "titulo": "Report Juan Pech"
    }
    ```
 
-3. **Crear nuevo contenido**
+3. **Create new content**
    ```
    POST /api/vocabulario/
    Body: {
@@ -489,102 +489,102 @@ Importa la colección disponible en `Maya_Backend_Auth.postman_collection.json` 
 
 ---
 
-## 🔧 Configuración de Producción
+## 🔧 Production Configuration
 
-### Variables de Entorno Recomendadas
+### Recommended Environment Variables
 
 ```env
-# Seguridad
+# Security
 DEBUG=False
 SECRET_KEY=<strong-random-key>
-ALLOWED_HOSTS=tu-dominio.com,www.tu-dominio.com
+ALLOWED_HOSTS=your-domain.com,www.your-domain.com
 
-# Base de Datos
+# Database
 MONGO_DB_NAME=maya_learning_prod
 MONGO_HOST=<mongodb-host>
 MONGO_PORT=27017
-MONGO_USER=<usuario>
+MONGO_USER=<user>
 MONGO_PASSWORD=<password>
 
 # JWT
-JWT_ACCESS_LIFETIME=2  # horas
-JWT_REFRESH_LIFETIME=7  # días
+JWT_ACCESS_LIFETIME=2  # hours
+JWT_REFRESH_LIFETIME=7  # days
 ```
 
-### Recomendaciones
-- Usar MongoDB Atlas para base de datos en la nube
-- Implementar HTTPS/SSL
-- Configurar CORS apropiadamente
-- Usar servidor WSGI como Gunicorn
-- Implementar rate limiting
-- Configurar logs y monitoreo
+### Recommendations
+- Use MongoDB Atlas for cloud database
+- Implement HTTPS/SSL
+- Configure CORS appropriately
+- Use a WSGI server like Gunicorn
+- Implement rate limiting
+- Configure logging and monitoring
 
 ---
 
-## 🚀 Mejoras Futuras
+## 🚀 Future Improvements
 
-### Funcionalidades Planificadas
-- [ ] Sistema de recuperación de contraseña por email
-- [ ] Gamificación con puntos y insignias
-- [ ] Chat en tiempo real entre alumnos y profesores
-- [ ] Soporte para más tipos de actividades (fill-in-the-blank, matching)
-- [ ] Exportación de reportes en Excel
-- [ ] Dashboard interactivo con gráficas
-- [ ] Notificaciones push para la app móvil
-- [ ] Sistema de recomendación de contenido basado en rendimiento
+### Planned Features
+- [ ] Password recovery via email
+- [ ] Gamification with points and badges
+- [ ] Real-time chat between students and teachers
+- [ ] Support for more activity types (fill-in-the-blank, matching)
+- [ ] Report export to Excel
+- [ ] Interactive dashboard with charts
+- [ ] Push notifications for the mobile app
+- [ ] Performance-based content recommendation system
 
-### Mejoras Técnicas
-- [ ] Implementar caché con Redis
-- [ ] Agregar tests unitarios y de integración completos
-- [ ] Documentación automática con Swagger/OpenAPI
-- [ ] CI/CD con GitHub Actions
-- [ ] Dockerización del proyecto
+### Technical Improvements
+- [ ] Implement cache with Redis
+- [ ] Add complete unit and integration tests
+- [ ] Automatic documentation with Swagger/OpenAPI
+- [ ] CI/CD with GitHub Actions
+- [ ] Dockerize the project
 - [ ] API versioning
-- [ ] Rate limiting avanzado
-- [ ] Logging estructurado
+- [ ] Advanced rate limiting
+- [ ] Structured logging
 
 ---
 
-## 🤝 Contribuciones
+## 🤝 Contributions
 
-Este proyecto fue desarrollado como parte de un sistema educativo para la preservación del lenguaje maya. Las contribuciones son bienvenidas.
+This project was developed as part of an educational system for the preservation of the Maya language. Contributions are welcome.
 
-### Cómo Contribuir
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
----
-
-## 📝 Licencia
-
-Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+### How to Contribute
+1. Fork the repository
+2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## 👨‍💻 Autor
+## 📝 License
+
+This project is open source and available under the MIT license.
+
+---
+
+## 👨‍💻 Author
 
 **Jonathan**
 
 - GitHub: [@jonadev19](https://github.com/jonadev19)
-- Proyecto: [Maya Learning Backend](https://github.com/jonadev19/maya_learning_backend)
+- Project: [Maya Learning Backend](https://github.com/jonadev19/maya_learning_backend)
 
 ---
 
-## 📧 Contacto
+## 📧 Contact
 
-Para preguntas, sugerencias o colaboraciones, puedes contactarme a través de GitHub.
-
----
-
-## 🙏 Agradecimientos
-
-- A la comunidad maya por inspirar este proyecto
-- A los educadores dedicados a preservar lenguas indígenas
-- A la comunidad de Django y DRF por las excelentes herramientas
+For questions, suggestions, or collaborations, feel free to reach out through GitHub.
 
 ---
 
-**⭐ Si este proyecto te resulta útil, no olvides darle una estrella en GitHub!**
+## 🙏 Acknowledgements
+
+- To the Maya community for inspiring this project
+- To the educators dedicated to preserving indigenous languages
+- To the Django and DRF community for the excellent tools
+
+---
+
+**⭐ If you find this project useful, don't forget to give it a star on GitHub!**
