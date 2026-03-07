@@ -14,6 +14,7 @@ import pymongo
 from pymongo import MongoClient
 import certifi
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,8 +29,7 @@ SECRET_KEY = config('SECRET-KEY', default='django-insecure-0+0i_enr_b=m8tg)tp7p3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['maya-learning-backend.onrender.com', '10.0.2.2', '127.0.0.1']
-
+ALLOWED_HOSTS = ['10.0.2.2', '127.0.0.1', '.onrender.com']
 
 # Application definition
 
