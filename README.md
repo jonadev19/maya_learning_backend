@@ -521,30 +521,6 @@ JWT_REFRESH_LIFETIME=7  # days
 
 ---
 
-## 🚀 Future Improvements
-
-### Planned Features
-- [ ] Password recovery via email
-- [ ] Gamification with points and badges
-- [ ] Real-time chat between students and teachers
-- [ ] Support for more activity types (fill-in-the-blank, matching)
-- [ ] Report export to Excel
-- [ ] Interactive dashboard with charts
-- [ ] Push notifications for the mobile app
-- [ ] Performance-based content recommendation system
-
-### Technical Improvements
-- [ ] Implement cache with Redis
-- [ ] Add complete unit and integration tests
-- [ ] Automatic documentation with Swagger/OpenAPI
-- [ ] CI/CD with GitHub Actions
-- [ ] Dockerize the project
-- [ ] API versioning
-- [ ] Advanced rate limiting
-- [ ] Structured logging
-
----
-
 ## 🤝 Contributions
 
 This project was developed as part of an educational system for the preservation of the Maya language. Contributions are welcome.
