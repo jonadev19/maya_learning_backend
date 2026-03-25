@@ -521,6 +521,24 @@ JWT_REFRESH_LIFETIME=7  # days
 
 ---
 
+## 🧠 What I Learned
+
+**Django + MongoDB without an ORM is non-trivial**
+Django's ecosystem assumes you're using its ORM. Integrating raw PyMongo 
+required building custom authentication and permission layers from scratch 
+— no shortcuts like `request.user` out of the box.
+
+**RBAC implementation from scratch**
+Without Django's built-in permission system (tied to its ORM), I had to 
+design and implement role-based access control manually, which gave me a 
+deeper understanding of how authorization works at the middleware level.
+
+**JWT token lifecycle**
+Implementing access/refresh token rotation with a blacklist taught me 
+the tradeoffs between stateless auth and secure logout.
+
+---
+
 ## 🤝 Contributions
 
 This project was developed as part of an educational system for the preservation of the Maya language. Contributions are welcome.
